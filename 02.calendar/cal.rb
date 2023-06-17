@@ -19,6 +19,6 @@ print '   ' * Date.new(year, month, 1).wday
 last_day = Date.new(year, month, -1).day
 (1..last_day).each do |d|
   date = Date.new(year,month,d)
-  printf('%2d',(date == Date.today ? "\e[36m#{d}\e[0m" : d))
+  printf('%2s',(date == Date.today ? "\e[36m#{d}\e[0m" : d))
   print(Date.new(year,month,d).wday == 6 ? "\n" : ' ')
 end
