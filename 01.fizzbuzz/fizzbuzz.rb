@@ -1,3 +1,4 @@
+#!/usr/bin/env ruby
 def fizz_buzz(num)
   if num % 15 == 0
     'Fizz Buzz'
