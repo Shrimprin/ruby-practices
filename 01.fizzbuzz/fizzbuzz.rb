@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 def fizz_buzz(num)
   if num % 15 == 0
-    'Fizz Buzz'
+    'FizzBuzz'
   elsif num % 3 == 0
       "Fizz"
   elsif num % 5 == 0
