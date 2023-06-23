@@ -54,7 +54,7 @@ class LsCommand
       # 各列の最大幅を取得
       columns_width = calc_columns_width(columns_array)
 
-      # 表示する列を計算（列間スペースを含める）
+      # 表示する列の幅を計算（列間スペースを含める）
       display_width = columns_width.sum + (2 * (columns_num - 1))
       cut_columns_num += 1
     end
@@ -94,7 +94,7 @@ class LsCommand
     columns_array.each do |column|
       max_width = 0
       column.each do |item|
-        item_width = item.length
+        item_width = count_character(item)
         max_width = item_width if item_width > max_width
       end
       columns_width << max_width
@@ -111,12 +111,30 @@ class LsCommand
       columns_array.each_with_index do |column, column_index|
         break if !column[row_index] # 要素が無ければループを抜ける
 
-        row += column[row_index].ljust(columns_width[column_index] + 2) # +2は隣の行とのスペースのため
+        row += custom_rjust(column[row_index], columns_width[column_index] + 2) # +2は隣の行とのスペースのため
       end
       row.rstrip!
       rows_array << row
     end
     rows_array
+  end
+
+  # 文字数を返す
+  def count_character(str)
+    count = 0
+    str.chars.each do |char|
+      count += (char.bytesize == 1 ? 1 : 2)
+    end
+    count
+  end
+
+  # rjustメソッドの改良版
+  # 半角を1文字・全角を2文字でカウントして右埋めする
+  def custom_rjust(str, target_length, padding_char = ' ')
+    str_length = count_character(str)
+    padding_length = target_length - str_length
+    padding = padding_char * (padding_length / count_character(padding_char))
+    str + padding
   end
 end
 
