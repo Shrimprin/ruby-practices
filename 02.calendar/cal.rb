@@ -13,10 +13,12 @@ opt.on('-m', '--month MONTH', Integer, 'Specify the month.'){|m| month = m}
 opt.parse!(ARGV)
 
 #-----カレンダーを表示する
+first_day = Date.new(year, month, 1)
+last_day = Date.new(year, month, -1)
 print "      \e[35m#{month}\e[0m月 \e[35m#{year}\e[0m\n"
 print "日 月 火 水 木 金 土 \n"
-print '   ' * Date.new(year, month, 1).wday
-(Date.new(year, month, 1)..Date.new(year, month, -1)).each do |d|
-  printf('%2s',(d== Date.today ? "\e[36m#{d.day}\e[0m" : d.day))
+print '   ' * first_day.wday
+(first_day..last_day).each do |d|
+  printf('%2s',(d == Date.today ? "\e[36m#{d.day}\e[0m" : d.day))
   print(d.saturday? ? "\n" : ' ')
 end
