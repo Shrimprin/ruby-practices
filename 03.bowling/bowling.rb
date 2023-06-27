@@ -15,7 +15,7 @@ class BowlingGame
 
   # スコアを計算するメイン関数
   def score
-    total_score = 0 # スコアの合計
+    total_score = 0
     shot_index = 0 # 何投目かのインデックス
 
     (1..10).each do |i|
@@ -52,11 +52,7 @@ class BowlingGame
 
   # 最後のフレームのスコアを計算する関数
   def lastframe_score(shot_index)
-    lastframe_score = 0
-    (shot_index..@shots.length - 1).each do |i|
-      lastframe_score += @shots[i]
-    end
-    lastframe_score
+    @shots[shot_index..-1].sum
   end
 
   # ストライクのスコアを計算する関数
