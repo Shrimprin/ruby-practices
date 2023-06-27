@@ -52,7 +52,7 @@ class BowlingGame
 
   # 最後のフレームのスコアを計算する関数
   def lastframe_score(shot_index)
-    @shots[shot_index..-1].sum
+    @shots[shot_index..].sum
   end
 
   # ストライクのスコアを計算する関数
