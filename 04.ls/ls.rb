@@ -14,13 +14,11 @@ class LsCommand
   end
 
   def list_files
-    files = []
     if FileTest.directory? @file
-      files = Dir.glob("#{@file}/*").map { |file| File.basename(file) }
+      Dir.glob("#{@file}/*").map { |file| File.basename(file) }
     else
-      files << File.basename(@file)
+      [File.basename(@file)]
     end
-    files
   end
 
   def sort_files
@@ -65,36 +63,31 @@ class LsCommand
     # 各列の要素数を計算
     quote = (@files.length / columns_num).floor
     remain = @files.length % columns_num
-    item_num_per_column = (remain.positive? ? quote + 1 : quote)
-
-    columns = []
+    file_num_per_column = (remain.positive? ? quote + 1 : quote)
+    files = []
     columns_num.times do |column_index|
-      start_index = item_num_per_column * column_index
+      start_index = file_num_per_column * column_index
       break if start_index >= @files.length
 
-      end_index = item_num_per_column * (column_index + 1) - 1
+      end_index = file_num_per_column * (column_index + 1) - 1
       end_index = @files.length - 1 if end_index >= @files.length
-
-      column = []
-      (start_index..end_index).each do |item_index|
-        column << @files[item_index]
-      end
-      columns << column
+      files <<
+        (start_index..end_index).map do |file_index|
+          @files[file_index]
+        end
     end
-    columns
+    files # breakで抜けた際にもfilesを返せるように
   end
 
   def calc_columns_width(columns)
-    columns_width = []
-    columns.each do |column|
+    columns.map do |column|
       max_width = 0
-      column.each do |item|
-        item_width = count_character(item)
-        max_width = item_width if item_width > max_width
+      column.each do |file|
+        file_width = count_character(file)
+        max_width = file_width if file_width > max_width
       end
-      columns_width << max_width
+      max_width
     end
-    columns_width
   end
 
   # 列を行ごとに結合して配列で返す
