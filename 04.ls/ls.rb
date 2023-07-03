@@ -16,11 +16,8 @@ class LsCommand
 
   def list_files
     if FileTest.directory? @file
-      if @is_all
-        Dir.glob("#{@file}/*", File::FNM_DOTMATCH).map { |file| File.basename(file) }
-      else
-        Dir.glob("#{@file}/*").map { |file| File.basename(file) }
-      end
+      flags = @is_all ? File::FNM_DOTMATCH : 0
+      Dir.glob("#{@file}/*", flags).map { |file| File.basename(file) }
     else
       [File.basename(@file)]
     end
