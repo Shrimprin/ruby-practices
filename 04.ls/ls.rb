@@ -8,14 +8,16 @@ class LsCommand
   COLUMNS_NUM = 3 # 表示する列数
 
   # 対象ディレクトリとその中のファイルをそれぞれクラス変数に格納する
-  def initialize(file)
+  def initialize(file, options)
+    @is_all = true if options[:all]
     @file = file
     @files = list_files
   end
 
   def list_files
     if FileTest.directory? @file
-      Dir.glob("#{@file}/*").map { |file| File.basename(file) }
+      flags = @is_all ? File::FNM_DOTMATCH : 0
+      Dir.glob("#{@file}/*", flags).map { |file| File.basename(file) }
     else
       [File.basename(@file)]
     end
@@ -116,6 +118,11 @@ class LsCommand
   end
 end
 
+options = {}
+opt = OptionParser.new
+opt.banner = 'Usage: ls.rb [options]'
+opt.on('-a', '--all', 'do not ignore entries starting with .') { options[:all] = true }
+opt.parse!(ARGV)
 files = ARGV
 files << Dir.pwd if files.empty?
 
@@ -129,7 +136,7 @@ files.each do |file|
 
   path = path.realpath
   puts "#{file}:" if files.length > 1 && FileTest.directory?(file)
-  ls = LsCommand.new(path)
+  ls = LsCommand.new(path, options)
   ls.sort_files
   ls.display_files
   puts # 出力結果の可読性のために空行を出力
