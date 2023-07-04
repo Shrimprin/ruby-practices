@@ -8,7 +8,8 @@ class LsCommand
   COLUMNS_NUM = 3 # 表示する列数
 
   # 対象ディレクトリとその中のファイルをそれぞれクラス変数に格納する
-  def initialize(file)
+  def initialize(file, options)
+    @is_reverse = true if options[:reverse]
     @file = file
     @files = list_files
   end
@@ -23,6 +24,7 @@ class LsCommand
 
   def sort_files
     @files.sort!
+    @files.reverse! if @is_reverse
   end
 
   def display_files
@@ -116,6 +118,11 @@ class LsCommand
   end
 end
 
+options = {}
+opt = OptionParser.new
+opt.banner = 'Usage: ls.rb [options]'
+opt.on('-r', '--reverse', 'reverse order while sorting.') { options[:reverse] = true }
+opt.parse!(ARGV)
 files = ARGV
 files << Dir.pwd if files.empty?
 
@@ -129,7 +136,7 @@ files.each do |file|
 
   path = path.realpath
   puts "#{file}:" if files.length > 1 && FileTest.directory?(file)
-  ls = LsCommand.new(path)
+  ls = LsCommand.new(path, options)
   ls.sort_files
   ls.display_files
   puts # 出力結果の可読性のために空行を出力
