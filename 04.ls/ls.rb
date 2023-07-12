@@ -81,8 +81,16 @@ class LsCommand
       total_blocks = count_total_blocks_in_dir
       rows << "total #{total_blocks}"
     end
-    owner_char_length = count_owner_char_length
-    group_char_length = count_group_char_length
+
+    # 表示の幅を揃えるために、所有者名、グループ名の最長文字数を取得する
+    # 所有者名、グループ名を対象ファイルのフルパスから取得するため、{ファイル名, ファイルのフルパス}のハッシュを作成する
+    file_path_hash = {}
+    @files.map do |file|
+      file_path = @file.file? ? Pathname.new(@file) : Pathname.new(@file) + file
+      file_path_hash[file] = file_path
+    end
+    owner_char_length = count_owner_char_length(file_path_hash)
+    group_char_length = count_group_char_length(file_path_hash)
 
     rows <<
       @files.map do |file|
@@ -95,19 +103,19 @@ class LsCommand
     file_stat = file_path.lstat
     file_type = file_stat.ftype
     file_type_mark = FILE_TYPES[file_type]
-    file = "#{file} -> #{file_path.readlink}" if file_type == 'link'
     permissions = convert_mode_to_permission(file_stat)
     link_num = file_stat.nlink
     owner = Etc.getpwuid(file_stat.uid).name.ljust(owner_char_length)
     group = Etc.getgrgid(file_stat.gid).name.ljust(group_char_length)
     size = file_stat.size.to_s.rjust(4)
     time = file_stat.mtime.strftime('%b %d %H:%M')
+    file_name = file_type == 'link' ? "#{file} -> #{file_path.readlink}" : file
 
     if %w[characterSpecial blockSpecial].include?(file_type)
       rdev = "#{file_stat.rdev_major}, #{file_stat.rdev_minor}"
-      "#{file_type_mark}#{permissions} #{link_num} #{owner} #{group} #{rdev} #{time} #{file}"
+      "#{file_type_mark}#{permissions} #{link_num} #{owner} #{group} #{rdev} #{time} #{file_name}"
     else
-      "#{file_type_mark}#{permissions} #{link_num} #{owner} #{group} #{size} #{time} #{file}"
+      "#{file_type_mark}#{permissions} #{link_num} #{owner} #{group} #{size} #{time} #{file_name}"
     end
   end
 
@@ -168,9 +176,9 @@ class LsCommand
   end
 
   # lオプションで表示するオーナー名の幅を揃えるため、ディレクトリ内のオーナー名の最長文字数を取得する
-  def count_owner_char_length
+  def count_owner_char_length(file_path_hash)
     @files.map do |file|
-      file_path = @file.file? ? Pathname.new(@file) : Pathname.new(@file) + file
+      file_path = file_path_hash[file]
       file_stat = file_path.lstat
       owner = Etc.getpwuid(file_stat.uid).name
       owner.length
@@ -178,9 +186,9 @@ class LsCommand
   end
 
   # lオプションで表示するグループ名の幅を揃えるため、ディレクトリ内のグループ名の最長文字数を取得する
-  def count_group_char_length
+  def count_group_char_length(file_path_hash)
     @files.map do |file|
-      file_path = @file.file? ? Pathname.new(@file) : Pathname.new(@file) + file
+      file_path = file_path_hash[file]
       file_stat = file_path.lstat
       group = Etc.getgrgid(file_stat.gid).name
       group.length
