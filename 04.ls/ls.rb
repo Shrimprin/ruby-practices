@@ -76,19 +76,20 @@ class LsCommand
 
   # 表示する行の配列を返す（-lオプション用）
   def create_display_data_long
-    rows = []
-    if @files.length > 1
-      total_blocks = count_total_blocks_in_dir
-      rows << "total #{total_blocks}"
-    end
-
-    # 表示の幅を揃えるために、所有者名、グループ名の最長文字数を取得する
-    # 所有者名、グループ名を対象ファイルのフルパスから取得するため、{ファイル名, ファイルのフルパス}のハッシュを作成する
+    # ブロックサイズの合計、所有者名、グループ名を対象ファイルのフルパスから取得するために、{ファイル名, ファイルのフルパス}のハッシュを作成する
     file_path_hash = {}
     @files.map do |file|
       file_path = @file.file? ? Pathname.new(@file) : Pathname.new(@file) + file
       file_path_hash[file] = file_path
     end
+
+    rows = []
+    if @files.length > 1
+      total_blocks = count_total_blocks_in_dir(file_path_hash)
+      rows << "total #{total_blocks}"
+    end
+
+    # 表示の幅を揃えるために、所有者名、グループ名の最長文字数を取得する
     owner_char_length = count_owner_char_length(file_path_hash)
     group_char_length = count_group_char_length(file_path_hash)
 
@@ -168,9 +169,9 @@ class LsCommand
     mode.chars[-3..].map { |num| PERMISSIONS[num.to_i] }.join('')
   end
 
-  def count_total_blocks_in_dir
+  def count_total_blocks_in_dir(file_path_hash)
     @files.map do |file|
-      file_path = @file.file? ? Pathname.new(@file) : Pathname.new(@file) + file
+      file_path = file_path_hash[file]
       file_path.lstat.blocks
     end.sum / 2 # File.statで割り当てられるブロック数が512バイトであるのに対し、Linuxのデフォルトのブロック数は1024バイト。そのままではOS標準の2倍になるため1/2する
   end
