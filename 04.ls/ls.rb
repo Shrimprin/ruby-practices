@@ -26,8 +26,11 @@ class LsCommand
     'blockSpecial' => 'b',
     'socket' => 's'
   }.freeze
+
   # 対象ディレクトリとその中のファイルをそれぞれクラス変数に格納する
   def initialize(file, options)
+    @is_reverse = true if options[:reverse]
+    @is_all = true if options[:all]
     @is_long = true if options[:long]
     @file = file
     @files = list_files
@@ -35,7 +38,8 @@ class LsCommand
 
   def list_files
     if FileTest.directory? @file
-      Dir.glob("#{@file}/*").map { |file| File.basename(file) }
+      flags = @is_all ? File::FNM_DOTMATCH : 0
+      Dir.glob("#{@file}/*", flags).map { |file| File.basename(file) }
     else
       [File.basename(@file)]
     end
@@ -43,6 +47,7 @@ class LsCommand
 
   def sort_files
     @files.sort!
+    @files.reverse! if @is_reverse
   end
 
   def display_files
@@ -201,6 +206,8 @@ options = {}
 opt = OptionParser.new
 opt.banner = 'Usage: ls.rb [options]'
 opt.on('-l', 'use a long listing format.') { options[:long] = true }
+opt.on('-r', '--reverse', 'reverse order while sorting.') { options[:reverse] = true }
+opt.on('-a', '--all', 'do not ignore entries starting with .') { options[:all] = true }
 opt.parse!(ARGV)
 files = ARGV
 files << Dir.pwd if files.empty?
