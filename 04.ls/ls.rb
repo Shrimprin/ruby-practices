@@ -26,11 +26,13 @@ class LsCommand
     'blockSpecial' => 'b',
     'socket' => 's'
   }.freeze
+
   # 対象ディレクトリとその中のファイルをそれぞれクラス変数に格納する
   def initialize(file, options)
     @is_reverse = true if options[:reverse]
     @is_all = true if options[:all]
     @is_long = true if options[:long]
+
     @file = file
     @files = list_files
   end
