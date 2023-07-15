@@ -9,6 +9,7 @@ class LsCommand
 
   # 対象ディレクトリとその中のファイルをそれぞれクラス変数に格納する
   def initialize(file, options)
+    @is_reverse = true if options[:reverse]
     @is_all = true if options[:all]
     @file = file
     @files = list_files
@@ -25,6 +26,7 @@ class LsCommand
 
   def sort_files
     @files.sort!
+    @files.reverse! if @is_reverse
   end
 
   def display_files
@@ -121,6 +123,7 @@ end
 options = {}
 opt = OptionParser.new
 opt.banner = 'Usage: ls.rb [options]'
+opt.on('-r', '--reverse', 'reverse order while sorting.') { options[:reverse] = true }
 opt.on('-a', '--all', 'do not ignore entries starting with .') { options[:all] = true }
 opt.parse!(ARGV)
 files = ARGV
