@@ -10,13 +10,15 @@ class LsCommand
   # 対象ディレクトリとその中のファイルをそれぞれクラス変数に格納する
   def initialize(file, options)
     @is_reverse = true if options[:reverse]
+    @is_all = true if options[:all]
     @file = file
     @files = list_files
   end
 
   def list_files
     if FileTest.directory? @file
-      Dir.glob("#{@file}/*").map { |file| File.basename(file) }
+      flags = @is_all ? File::FNM_DOTMATCH : 0
+      Dir.glob("#{@file}/*", flags).map { |file| File.basename(file) }
     else
       [File.basename(@file)]
     end
@@ -122,6 +124,7 @@ options = {}
 opt = OptionParser.new
 opt.banner = 'Usage: ls.rb [options]'
 opt.on('-r', '--reverse', 'reverse order while sorting.') { options[:reverse] = true }
+opt.on('-a', '--all', 'do not ignore entries starting with .') { options[:all] = true }
 opt.parse!(ARGV)
 files = ARGV
 files << Dir.pwd if files.empty?
