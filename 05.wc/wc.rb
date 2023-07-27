@@ -79,7 +79,7 @@ class WcCommand
   end
 
   def calc_stdin_display_width(stdin_info_array)
-    max_digit = stdin_info_array.map { |stdin_info| count_digits(stdin_info) }.max
+    stdin_info_array.map { |stdin_info| count_digits(stdin_info) }.max
   end
 
   def format_stdin_info_array_to_output_line(stdin_info_array, display_width)
@@ -87,15 +87,14 @@ class WcCommand
   end
 
   def calc_file_display_width(file_info_hashes)
-    max_digit =
-      FILE_INFO_KEYS.map do |key|
-        next unless @options[key]
+    FILE_INFO_KEYS.map do |key|
+      next unless @options[key]
 
-        file_info_hashes
-          .select { |file_info_hash| file_info_hash[key] } # 値のある要素だけを選択
-          .map { |file_info_hash| count_digits(file_info_hash[key]) }
-          .max
-      end.compact.max
+      file_info_hashes
+        .select { |file_info_hash| file_info_hash[key] } # 値のある要素だけを選択
+        .map { |file_info_hash| count_digits(file_info_hash[key]) }
+        .max
+    end.compact.max
   end
 
   def calc_total(file_info_hashes)
