@@ -11,7 +11,6 @@ class WcCommand
     @options = (options.length.positive? ? options : { lines: true, words: true, bytes: true })
     if files.empty?
       @stdin = process_stdin
-      @options = @options.transform_keys { |key| key == :bytes ? :chars : key } # :bytesを:charsに変換
     else
       @files = files
     end
@@ -43,7 +42,7 @@ class WcCommand
     stdin_info_array = []
     stdin_info_array << count_stdin_lines_num if @options[:lines]
     stdin_info_array << count_stdin_words_num if @options[:words]
-    stdin_info_array << count_stdin_chars_num if @options[:chars]
+    stdin_info_array << count_stdin_bytesize if @options[:bytes]
     stdin_info_array
   end
 
@@ -55,8 +54,8 @@ class WcCommand
     @stdin.split(/\s+/).length
   end
 
-  def count_stdin_chars_num
-    @stdin.length
+  def count_stdin_bytesize
+    @stdin.bytesize
   end
 
   def gather_file_info
@@ -72,7 +71,7 @@ class WcCommand
 
       file_info_hash[:lines] = count_file_lines_num(file) if @options[:lines]
       file_info_hash[:words] = count_file_words_num(file) if @options[:words]
-      file_info_hash[:bytes] = count_file_size(file) if @options[:bytes]
+      file_info_hash[:bytes] = count_file_bytesize(file) if @options[:bytes]
       file_info_hash[:file] = file
       file_info_hash
     end
@@ -134,7 +133,7 @@ class WcCommand
     line_count
   end
 
-  def count_file_size(file)
+  def count_file_bytesize(file)
     return 0 if FileTest.directory?(file)
 
     file_path = Pathname.new(file)
