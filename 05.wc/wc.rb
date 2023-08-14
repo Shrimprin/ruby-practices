@@ -62,7 +62,7 @@ class WcCommand
   end
 
   def count_words_num(content)
-    content.nil? ? 0 : content.split(/\s+/).length
+    content.nil? ? 0 : content.strip.split(/\s+/).length
   end
 
   def count_bytesize(content)
