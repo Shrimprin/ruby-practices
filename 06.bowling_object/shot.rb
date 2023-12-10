@@ -11,4 +11,3 @@ class Shot
     @mark.to_i
   end
 end
-
