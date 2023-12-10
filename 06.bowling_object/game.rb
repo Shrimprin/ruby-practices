@@ -8,12 +8,14 @@ class Game
     frame = []
     marks.each do |mark|
       frame << mark
-      if @frames.size < 9 # 最終フレーム以外
-        next if frame.size < 2 && mark != 'X'
+      # 最終フレームのショット数は最大3となるため、ループ後に@framesに格納
+      next if @frames.size == 9
 
-        @frames << Frame.new(*frame)
-        frame.clear
-      end
+      # フレーム内のショット数が2またはストライクならば、@framesに格納
+      next unless frame.size == 2 || mark == 'X'
+
+      @frames << Frame.new(*frame)
+      frame.clear
     end
     # 最終フレーム
     @frames << Frame.new(*frame)
