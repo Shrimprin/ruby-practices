@@ -27,9 +27,7 @@ class Game
     score = 0
     10.times do |number|
       frame, next_frame, after_next_frame = @frames.slice(number, 3)
-      next_shots = next_frame.nil? ? [] : next_frame.shots
-      after_next_shots = after_next_frame.nil? ? [] : after_next_frame.shots
-      left_shots = next_shots + after_next_shots
+      left_shots = [next_frame&.shots, after_next_frame&.shots].compact.flatten
 
       score += if frame.strike?
                  frame.score + left_shots.slice(0, 2).sum(&:score)
