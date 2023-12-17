@@ -10,7 +10,7 @@ class Game
     frame = []
     marks.each do |mark|
       frame << mark
-      # 最終フレームのショット数は最大3となるため、ループ後に@framesに格納
+      # 最終フレームはループ後に@framesに格納するため、次のループへ
       next if @frames.size == 9
 
       # フレーム内のショット数が2またはストライクならば、@framesに格納
