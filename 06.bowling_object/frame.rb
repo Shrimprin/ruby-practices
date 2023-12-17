@@ -3,6 +3,7 @@
 require './shot'
 
 class Frame
+  STRIKE_AND_SPARE_SCORE = 10
   attr_reader :shots
 
   def initialize(first_mark, second_mark = nil, third_mark = nil)
@@ -17,10 +18,10 @@ class Frame
   end
 
   def strike?
-    @shots[0].score == 10
+    @shots[0].score == STRIKE_AND_SPARE_SCORE
   end
 
   def spare?
-    score == 10
+    score == STRIKE_AND_SPARE_SCORE
   end
 end

@@ -3,6 +3,8 @@
 require './frame'
 
 class Game
+  STRIKE_MARK = 'X'
+
   def initialize(marks)
     @frames = []
     frame = []
@@ -12,7 +14,7 @@ class Game
       next if @frames.size == 9
 
       # フレーム内のショット数が2またはストライクならば、@framesに格納
-      next unless frame.size == 2 || mark == 'X'
+      next unless frame.size == 2 || mark == STRIKE_MARK
 
       @frames << Frame.new(*frame)
       frame.clear
