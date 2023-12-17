@@ -9,9 +9,6 @@ class Shot
   end
 
   def score
-    @mark == STRIKE_MARK ? 10 : @mark.to_i
-    return 10 if @mark == STRIKE_MARK
-
-    @mark.to_i
+    @mark == STRIKE_MARK ? STRIKE_SCORE : @mark.to_i
   end
 end
