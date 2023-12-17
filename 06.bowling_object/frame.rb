@@ -22,6 +22,6 @@ class Frame
   end
 
   def spare?
-    score == STRIKE_AND_SPARE_SCORE
+    score == STRIKE_AND_SPARE_SCORE && !strike?
   end
 end
