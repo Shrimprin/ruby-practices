@@ -13,7 +13,7 @@ class Game
       # 最終フレームはループ後に@framesに格納するため、次のループへ
       next if @frames.size == 9
 
-      # フレーム内のショット数が2またはストライクならば、@framesに格納
+      # フレーム内のショット数が2またはストライクでないなら、次のループへ
       next unless frame.size == 2 || mark == STRIKE_MARK
 
       @frames << Frame.new(*frame)
