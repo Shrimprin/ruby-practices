@@ -4,26 +4,9 @@ require 'pathname'
 require 'etc'
 
 class FileItem
-  PERMISSIONS = {
-    7 => 'rwx',
-    6 => 'rw-',
-    5 => 'r-x',
-    4 => 'r--',
-    3 => '-wx',
-    2 => '-w-',
-    1 => '--x',
-    0 => '---'
-  }.freeze
+  attr_reader :path
 
-  FILE_TYPES = {
-    'file' => '-',
-    'directory' => 'd',
-    'link' => 'l',
-    'fifo' => 'p',
-    'characterSpecial' => 'c',
-    'blockSpecial' => 'b',
-    'socket' => 's'
-  }.freeze
+
 
   def initialize(dir, file)
     @path = Pathname.new(dir) + file
@@ -37,26 +20,29 @@ class FileItem
 
   def build_stat
     file_stat = @path.lstat
-    file_type = file_stat.ftype
-    file_type_mark = FILE_TYPES[file_type]
-    permissions = convert_mode_to_permission(file_stat)
+    type = file_stat.ftype
+    # permissions = convert_mode_to_permission(file_stat)
+    mode = file_stat.mode
     link_num = file_stat.nlink
     owner = Etc.getpwuid(file_stat.uid).name
     group = Etc.getgrgid(file_stat.gid).name
     rdev = "#{file_stat.rdev_major}, #{file_stat.rdev_minor}" # TODO:if %w[characterSpecial blockSpecial].include?(file_type)のときだけかも
     size = file_stat.size
     time = file_stat.mtime.strftime('%b %d %H:%M')
-    file_name = file_type == 'link' ? "#{file} -> #{@path.readlink}" : @path.basename
+    name = type == 'link' ? "#{file} -> #{@path.readlink}" : @path.basename
+    blocks = file_stat.blocks
     {
-      type: file_type_mark,
-      permissions: permissions,
+      type: type,
+      # permissions: permissions,
+      mode: mode,
       link_num: link_num,
       owner: owner,
       group: group,
       rdev:  rdev,
       size: size,
       time: time,
-      name: file_name.to_s
+      name: name.to_s,
+      blocks: blocks
     }
   end
 

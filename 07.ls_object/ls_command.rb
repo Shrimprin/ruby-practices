@@ -5,6 +5,7 @@ require 'optparse'
 
 require_relative './dir_item'
 require_relative './display_data'
+require_relative './long_display_data'
 
 class LsCommand
   def initialize(opt)
@@ -21,7 +22,8 @@ class LsCommand
   end
 
   def show
-    puts DisplayData.new(@dir_items, @options).result
+    display_data = @options[:long] ? LongDisplayData.new(@dir_items, @options) : DisplayData.new(@dir_items, @options)
+    puts display_data.result
   end
 end
 

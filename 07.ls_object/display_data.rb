@@ -10,32 +10,27 @@ class DisplayData
   end
 
   def result
-    format
-  end
-
-  private
-
-  def format
     formatted_data = []
     @dir_items.each do |dir_item|
-
       formatted_data << "#{dir_item.name}:" if @dir_items.length >= 2
       file_items = dir_item.file_items
       next if file_items.empty?
 
       sorted_file_items = sort(dir_item.file_items)
-      formatted_data << short_format(sorted_file_items)
+      formatted_data << format(sorted_file_items)
       formatted_data << "\n"
     end
     formatted_data
   end
+
+  private
 
   def sort(file_items)
     sorted_file_items = file_items.sort_by { |file_item| file_item.stat[:name] }
     @options[:reverse] ? sorted_file_items.reverse : sorted_file_items
   end
 
-  def short_format(file_items)
+  def format(file_items)
     # 表示幅がウィンドウ幅を上回る場合は表示列数を減らす
     window_width = `tput cols`.to_i
     display_width = window_width + 1
@@ -98,8 +93,5 @@ class DisplayData
     str_length = count_character(str)
     padding_length = target_length - str_length
     str + padding_char * (padding_length / count_character(padding_char))
-  end
-
-  def long_format
   end
 end
