@@ -22,11 +22,4 @@ class DirItem
       [File.basename(dir)]
     end
   end
-
-  def count_total_blocks(file_path_hash)
-    @files.map do |file|
-      file_path = file_path_hash[file]
-      file_path.lstat.blocks
-    end.sum / 2 # File.statで割り当てられるブロック数が512バイトであるのに対し、Linuxのデフォルトのブロック数は1024バイト。そのままではOS標準の2倍になるため1/2する
-  end
 end
