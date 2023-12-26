@@ -30,10 +30,4 @@ class FileItem
     blocks = file_stat.blocks
     { type:, mode:, link_num:, owner:, group:, rdev:, size:, time:, name:, blocks: }
   end
-
-  ## パーミッションの表記を数字から文字列に変換する
-  def convert_mode_to_permission(file_stat)
-    mode = file_stat.mode.to_s(8)
-    mode.chars[-3..].map { |num| PERMISSIONS[num.to_i] }.join('')
-  end
 end
