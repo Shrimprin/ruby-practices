@@ -23,7 +23,7 @@ class FileItem
     link_num = file_stat.nlink
     owner = Etc.getpwuid(file_stat.uid).name
     group = Etc.getgrgid(file_stat.gid).name
-    rdev = "#{file_stat.rdev_major}, #{file_stat.rdev_minor}" # TODO:if %w[characterSpecial blockSpecial].include?(file_type)のときだけかも
+    rdev = "#{file_stat.rdev_major}, #{file_stat.rdev_minor}"
     size = file_stat.size
     time = file_stat.mtime.strftime('%b %d %H:%M')
     name = type == 'link' ? "#{file} -> #{@path.readlink}" : @path.basename
