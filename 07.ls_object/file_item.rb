@@ -28,6 +28,7 @@ class FileItem
     time = file_stat.mtime.strftime('%b %d %H:%M')
     name = type == 'link' ? "#{file} -> #{@path.readlink}" : @path.basename.to_s
     blocks = file_stat.blocks
+
     {
       type:,
       mode:,

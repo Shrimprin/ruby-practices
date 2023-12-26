@@ -26,7 +26,7 @@ class DisplayData
   private
 
   def sort_dir_items
-    sorted_dir_items = @dir_items.sort_by { |dir_item| dir_item.name }
+    sorted_dir_items = @dir_items.sort_by(&:name)
     @options[:reverse] ? sorted_dir_items.reverse : sorted_dir_items
   end
 
