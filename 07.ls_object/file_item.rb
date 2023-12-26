@@ -6,8 +6,6 @@ require 'etc'
 class FileItem
   attr_reader :path
 
-
-
   def initialize(dir, file)
     @path = Pathname.new(dir) + file
   end
@@ -21,7 +19,6 @@ class FileItem
   def build_stat
     file_stat = @path.lstat
     type = file_stat.ftype
-    # permissions = convert_mode_to_permission(file_stat)
     mode = file_stat.mode
     link_num = file_stat.nlink
     owner = Etc.getpwuid(file_stat.uid).name
@@ -33,7 +30,6 @@ class FileItem
     blocks = file_stat.blocks
     {
       type: type,
-      # permissions: permissions,
       mode: mode,
       link_num: link_num,
       owner: owner,
