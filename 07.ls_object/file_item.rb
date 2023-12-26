@@ -26,19 +26,19 @@ class FileItem
     rdev = "#{file_stat.rdev_major}, #{file_stat.rdev_minor}"
     size = file_stat.size
     time = file_stat.mtime.strftime('%b %d %H:%M')
-    name = type == 'link' ? "#{file} -> #{@path.readlink}" : @path.basename
+    name = type == 'link' ? "#{file} -> #{@path.readlink}" : @path.basename.to_s
     blocks = file_stat.blocks
     {
-      type: type,
-      mode: mode,
-      link_num: link_num,
-      owner: owner,
-      group: group,
-      rdev:  rdev,
-      size: size,
-      time: time,
-      name: name.to_s,
-      blocks: blocks
+      type:,
+      mode:,
+      link_num:,
+      owner:,
+      group:,
+      rdev:,
+      size:,
+      time:,
+      name:,
+      blocks:
     }
   end
 
