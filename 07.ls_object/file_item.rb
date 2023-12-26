@@ -28,19 +28,7 @@ class FileItem
     time = file_stat.mtime.strftime('%b %d %H:%M')
     name = type == 'link' ? "#{file} -> #{@path.readlink}" : @path.basename.to_s
     blocks = file_stat.blocks
-
-    {
-      type:,
-      mode:,
-      link_num:,
-      owner:,
-      group:,
-      rdev:,
-      size:,
-      time:,
-      name:,
-      blocks:
-    }
+    { type:, mode:, link_num:, owner:, group:, rdev:, size:, time:, name:, blocks: }
   end
 
   ## パーミッションの表記を数字から文字列に変換する
