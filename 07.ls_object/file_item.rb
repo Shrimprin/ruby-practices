@@ -7,7 +7,7 @@ class FileItem
   attr_reader :path
 
   def initialize(dir, file)
-    @path = File.directory?(dir) ? Pathname.new(dir) + file : Pathname.new(dir)
+    @path = Pathname.new(dir) + file
   end
 
   def stat

@@ -4,15 +4,26 @@ class DisplayData
   COLUMNS_NUM = 3 # 表示する列数
   COLUMNS_SPACING = 2
 
-  def initialize(dir_items, options)
+  def initialize(dir_items, file_items, non_exist_items, options)
     @dir_items = dir_items
+    @file_items = file_items
+    @non_exist_items = non_exist_items
     @options = options
   end
 
   def result
     formatted_data = []
+    sort_non_exist_items.each do |non_exist_item|
+      formatted_data << "ls: #{non_exist_item}: No such file or directory"
+    end
+
+    formatted_data << format(sort_file_items(@file_items))
+    formatted_data << "\n" if !@file_items.empty?
+
+    dir_name_flag = @dir_items.length >= 2 || !@file_items.empty?
+
     sort_dir_items.each do |dir_item|
-      formatted_data << "#{dir_item.name}:" if @dir_items.length >= 2
+      formatted_data << "#{dir_item.name}:" if dir_name_flag
       file_items = dir_item.file_items
       next if file_items.empty?
 
@@ -24,6 +35,10 @@ class DisplayData
   end
 
   private
+
+  def sort_non_exist_items
+    @non_exist_items.sort
+  end
 
   def sort_dir_items
     sorted_dir_items = @dir_items.sort_by(&:name)

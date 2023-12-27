@@ -15,14 +15,16 @@ class LsCommand
     opt.on('-r', '--reverse', 'reverse order while sorting.') { @options[:reverse] = true }
     opt.on('-a', '--all', 'do not ignore entries starting with .') { @options[:all] = true }
     opt.parse!(ARGV) # opt.onメソッドで定義したブロックを実行し、ARGVからそのオプション部分を取り除く
-    dirs = ARGV
-    dirs << Dir.pwd if dirs.empty?
 
+    exist_items, @non_exist_items = ARGV.partition { |item| File.exist?(item) }
+    dirs, files = exist_items.partition { |item| File.directory?(item) }
+    dirs << Dir.pwd if dirs.empty? && files.empty?
     @dir_items = dirs.map { |dir| DirItem.new(dir, @options[:all]) }
+    @file_items = files.map { |file| FileItem.new('', file)}
   end
 
   def show
-    display_data = @options[:long] ? LongDisplayData.new(@dir_items, @options) : DisplayData.new(@dir_items, @options)
+    display_data = @options[:long] ? LongDisplayData.new(@dir_items, @file_items, @non_exist_items, @options) : DisplayData.new(@dir_items, @file_items, @non_exist_items, @options)
     puts display_data.result
   end
 end

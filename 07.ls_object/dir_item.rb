@@ -8,7 +8,6 @@ class DirItem
   def initialize(dir, all_option)
     @name = dir
     files = collect_files(dir, all_option)
-    # TODO:存在しないフォルダの場合の例外処理を書く
     @file_items = files.map { |file| FileItem.new(dir, file) }
   end
 
