@@ -20,11 +20,16 @@ class LsCommand
     dirs, files = exist_items.partition { |item| File.directory?(item) }
     dirs << Dir.pwd if dirs.empty? && files.empty?
     @dir_items = dirs.map { |dir| DirItem.new(dir, @options[:all]) }
-    @file_items = files.map { |file| FileItem.new('', file)}
+    @file_items = files.map { |file| FileItem.new('', file) }
   end
 
   def show
-    display_data = @options[:long] ? LongDisplayData.new(@dir_items, @file_items, @non_exist_items, @options) : DisplayData.new(@dir_items, @file_items, @non_exist_items, @options)
+    display_data =
+      if @options[:long]
+        LongDisplayData.new(@dir_items, @file_items, @non_exist_items, @options)
+      else
+        DisplayData.new(@dir_items, @file_items, @non_exist_items, @options)
+      end
     puts display_data.result
   end
 end
