@@ -45,9 +45,10 @@ class LongDisplayData < DisplayData
   def count_total_blocks(file_items)
     # File.statで割り当てられるブロック数が512バイトであるのに対し、
     # Linuxのデフォルトのブロック数は1024バイト。そのままではOS標準の2倍になるため1/2する
+    # MacOSの512バイトのためそのままOK
     file_items.map do |file_item|
       file_item.stat[:blocks]
-    end.sum / 2
+    end.sum
   end
 
   # オーナー名の幅を揃えるため、ディレクトリ内のオーナー名の最長文字数を取得する
