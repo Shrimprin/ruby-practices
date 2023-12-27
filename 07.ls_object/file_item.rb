@@ -25,7 +25,7 @@ class FileItem
     group = Etc.getgrgid(file_stat.gid).name
     rdev = "#{file_stat.rdev_major}, #{file_stat.rdev_minor}"
     size = file_stat.size
-    time = file_stat.mtime.strftime('%b %d %H:%M')
+    time = file_stat.mtime.strftime('%m %d %H:%M')
     name = type == 'link' ? "#{file} -> #{@path.readlink}" : @path.basename.to_s
     blocks = file_stat.blocks
     { type:, mode:, link_num:, owner:, group:, rdev:, size:, time:, name:, blocks: }
