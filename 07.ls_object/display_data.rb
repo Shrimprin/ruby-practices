@@ -17,8 +17,10 @@ class DisplayData
       formatted_data << "ls: #{non_exist_item}: No such file or directory"
     end
 
-    formatted_data << format(sort_file_items(@file_items))
-    formatted_data << "\n" if !@file_items.empty?
+    unless @file_items.empty?
+      formatted_data << format(sort_file_items(@file_items))
+      formatted_data << "\n"
+    end
 
     dir_name_flag = @dir_items.length >= 2 || !@file_items.empty?
 
