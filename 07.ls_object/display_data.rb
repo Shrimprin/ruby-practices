@@ -2,7 +2,7 @@
 
 class DisplayData
   COLUMNS_NUM = 3 # 表示する列数
-  COLUMNS_SPACING = 2
+  COLUMNS_SPACING = 2 # 列間のスペース
 
   def initialize(dir_items, file_items, non_exist_items, options)
     @dir_items = dir_items
