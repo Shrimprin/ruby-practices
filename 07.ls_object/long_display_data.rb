@@ -69,7 +69,7 @@ class LongDisplayData < DisplayData
 
   def build_row(file_item, owner_char_length, group_char_length)
     type = file_item.stat[:type]
-    type_mark = conver_ftype_to_mark(type)
+    type_mark = convert_ftype_to_mark(type)
     permissions = convert_mode_to_permissions(file_item.stat[:mode])
     link_num = file_item.stat[:link_num]
     owner = file_item.stat[:owner].ljust(owner_char_length)
@@ -86,7 +86,7 @@ class LongDisplayData < DisplayData
     end
   end
 
-  def conver_ftype_to_mark(type)
+  def convert_ftype_to_mark(type)
     FILE_TYPES[type]
   end
 
