@@ -32,7 +32,7 @@ class ShortDisplayFormat < DisplayFormat
   # ファイル一覧を表示列ごとの配列にして返す
   def store_files_in_column(file_items, columns_num)
     file_num_per_column = (file_items.length / columns_num.to_f).ceil
-    files = file_items.each_slice(file_num_per_column).to_a
+    file_items.each_slice(file_num_per_column).to_a
   end
 
   def calc_columns_width(columns)
@@ -49,7 +49,7 @@ class ShortDisplayFormat < DisplayFormat
       end
 
     file_names_by_row = transpose_columns_to_rows(file_names_by_column)
-    file_names_by_row.map{ |row| row.join('').strip }
+    file_names_by_row.map { |row| row.join('').strip }
   end
 
   def count_character(str)
@@ -67,6 +67,6 @@ class ShortDisplayFormat < DisplayFormat
   # transposeメソッドの改良版
   # 各列の要素数が異なっていても転置する
   def transpose_columns_to_rows(columns)
-    columns[0].zip(*columns[1..-1])
+    columns[0].zip(*columns[1..])
   end
 end
