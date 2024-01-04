@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
-class LongDisplayData < DisplayData
+require_relative './display_format'
+
+class LongDisplayFormat < DisplayFormat
   PERMISSIONS = {
     7 => 'rwx',
     6 => 'rw-',

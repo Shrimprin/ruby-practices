@@ -4,8 +4,8 @@
 require 'optparse'
 
 require_relative './dir_item'
-require_relative './display_data'
-require_relative './long_display_data'
+require_relative './short_display_format'
+require_relative './long_display_format'
 
 class LsCommand
   def initialize(opt)
@@ -26,9 +26,9 @@ class LsCommand
   def show
     display_data =
       if @options[:long]
-        LongDisplayData.new(@dir_items, @file_items, @non_exist_items, @options)
+        LongDisplayFormat.new(@dir_items, @file_items, @non_exist_items, @options)
       else
-        DisplayData.new(@dir_items, @file_items, @non_exist_items, @options)
+        ShortDisplayFormat.new(@dir_items, @file_items, @non_exist_items, @options)
       end
     puts display_data.result
   end
