@@ -70,20 +70,21 @@ class LongDisplayFormat < DisplayFormat
   end
 
   def build_row(file_item, owner_char_length, group_char_length)
-    type = file_item.stat[:type]
+    file_item_stat = file_item.stat
+    type = file_item_stat[:type]
     type_mark = convert_ftype_to_mark(type)
-    permissions = convert_mode_to_permissions(file_item.stat[:mode])
-    link_num = file_item.stat[:link_num]
-    owner = file_item.stat[:owner].ljust(owner_char_length)
-    group = file_item.stat[:group].ljust(group_char_length)
-    time = file_item.stat[:time]
-    name = file_item.stat[:name]
+    permissions = convert_mode_to_permissions(file_item_stat[:mode])
+    link_num = file_item_stat[:link_num]
+    owner = file_item_stat[:owner].ljust(owner_char_length)
+    group = file_item_stat[:group].ljust(group_char_length)
+    time = file_item_stat[:time]
+    name = file_item_stat[:name]
 
     if %w[characterSpecial blockSpecial].include?(type)
-      rdev = file_item.stat[:rdev]
+      rdev = file_item_stat[:rdev]
       "#{type_mark}#{permissions} #{link_num} #{owner} #{group} #{rdev} #{time} #{name}"
     else
-      size = file_item.stat[:size].to_s.rjust(FILE_SIZE_COLUMUNS)
+      size = file_item_stat[:size].to_s.rjust(FILE_SIZE_COLUMUNS)
       "#{type_mark}#{permissions} #{link_num} #{owner} #{group} #{size} #{time} #{name}"
     end
   end
