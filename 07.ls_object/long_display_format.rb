@@ -47,7 +47,7 @@ class LongDisplayFormat < DisplayFormat
   def count_total_blocks(file_items)
     # File.statで割り当てられるブロック数が512バイトであるのに対し、
     # Linuxのデフォルトのブロック数は1024バイト。そのままではOS標準の2倍になるため1/2する
-    # MacOSの512バイトのためそのままOK
+    # MacOSは512バイトのためそのままOK
     file_items.map do |file_item|
       file_item.stat[:blocks]
     end.sum
