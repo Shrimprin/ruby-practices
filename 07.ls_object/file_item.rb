@@ -11,7 +11,7 @@ class FileItem
   end
 
   def stat
-    @stat.nil? ? @stat = build_stat : @stat
+    @stat ||= build_stat
   end
 
   private
