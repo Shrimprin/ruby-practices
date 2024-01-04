@@ -24,13 +24,9 @@ class LsCommand
   end
 
   def show
-    display_data =
-      if @options[:long]
-        LongDisplayFormat.new(@dir_items, @file_items, @non_exist_items, @options)
-      else
-        ShortDisplayFormat.new(@dir_items, @file_items, @non_exist_items, @options)
-      end
-    puts display_data.result
+    display_format_class = @options[:long] ? LongDisplayFormat : ShortDisplayFormat
+    display_format = display_format_class.new(@dir_items, @file_items, @non_exist_items, @options)
+    puts display_format.result
   end
 end
 
