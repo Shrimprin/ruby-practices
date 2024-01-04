@@ -26,7 +26,6 @@ class ShortDisplayFormat < DisplayFormat
       cut_columns_num += 1
     end
 
-    # 列ごとの行列を行ごとの配列に変える
     unite_columns_to_rows(columns, columns_width)
   end
 
@@ -42,14 +41,15 @@ class ShortDisplayFormat < DisplayFormat
 
   # 列を行ごとに結合して配列で返す
   def unite_columns_to_rows(columns, columns_width)
-    rows_num = columns[0].length # 列の中の要素数が行数となる
-    (0..rows_num - 1).map do |row_index|
+    file_names_by_column =
       columns.map.with_index do |column, column_index|
-        next if !column[row_index]
+        column.map do |file_item|
+          rjust_by_displayed_width(file_item.stat[:name], columns_width[column_index] + COLUMNS_SPACING)
+        end
+      end
 
-        rjust_by_displayed_width(column[row_index].stat[:name], columns_width[column_index] + COLUMNS_SPACING)
-      end.join('').rstrip
-    end
+    file_names_by_row = transpose_columns_to_rows(file_names_by_column)
+    file_names_by_row.map{ |row| row.join('').strip }
   end
 
   def count_character(str)
@@ -62,5 +62,11 @@ class ShortDisplayFormat < DisplayFormat
     str_length = count_character(str)
     padding_length = target_length - str_length
     str + padding_char * (padding_length / count_character(padding_char))
+  end
+
+  # transposeメソッドの改良版
+  # 各列の要素数が異なっていても転置する
+  def transpose_columns_to_rows(columns)
+    columns[0].zip(*columns[1..-1])
   end
 end
