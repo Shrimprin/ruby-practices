@@ -33,16 +33,7 @@ class ShortDisplayFormat < DisplayFormat
   # ファイル一覧を表示列ごとの配列にして返す
   def store_files_in_column(file_items, columns_num)
     file_num_per_column = (file_items.length / columns_num.to_f).ceil
-    files = []
-    columns_num.times do |column_index|
-      start_index = file_num_per_column * column_index
-      break if start_index >= file_items.length
-
-      end_index = file_num_per_column * (column_index + 1) - 1
-      end_index = file_items.length - 1 if end_index >= file_items.length
-      files << (start_index..end_index).map { |file_index| file_items[file_index] }
-    end
-    files # breakで抜けた際にもfilesを返せるように
+    files = file_items.each_slice(file_num_per_column).to_a
   end
 
   def calc_columns_width(columns)
