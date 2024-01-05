@@ -16,7 +16,7 @@ class DirItem
   def collect_files(dir, all_option)
     if FileTest.directory?(dir)
       dotmatch_option = all_option ? File::FNM_DOTMATCH : 0
-      Dir.glob("#{dir}/*", dotmatch_option).map { |file| File.basename(file) }
+      Dir.glob("#{dir}/*", flags: dotmatch_option, base: dir)
     else
       [File.basename(dir)]
     end
