@@ -20,7 +20,7 @@ class LsCommand
     dirs, files = exist_items.partition { |item| File.directory?(item) }
     dirs << Dir.pwd if dirs.empty? && files.empty?
     @dir_items = dirs.map { |dir| DirItem.new(dir, @options[:all]) }
-    @file_items = files.map { |file| FileItem.new('', file) }
+    @file_items = files.map { |file| FileItem.new(file) }
   end
 
   def show

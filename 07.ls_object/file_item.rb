@@ -6,8 +6,8 @@ require 'etc'
 class FileItem
   attr_reader :path
 
-  def initialize(dir, file)
-    @path = Pathname.new(dir) + file
+  def initialize(file)
+    @path = Pathname.new(file)
   end
 
   def stat
