@@ -24,8 +24,6 @@ class LongDisplayFormat < DisplayFormat
     'socket' => 's'
   }.freeze
 
-  FILE_SIZE_COLUMUNS = 4
-
   private
 
   def format(file_items)
@@ -35,12 +33,10 @@ class LongDisplayFormat < DisplayFormat
       rows << "total #{total_blocks}"
     end
 
-    owner_char_length = count_owner_char_length(file_items)
-    group_char_length = count_group_char_length(file_items)
-
+    max_char_lengths = find_max_char_lengths(file_items)
     rows <<
       file_items.map do |file_item|
-        build_row(file_item, owner_char_length, group_char_length)
+        build_row(file_item, *max_char_lengths)
       end
   end
 
@@ -53,28 +49,20 @@ class LongDisplayFormat < DisplayFormat
     end.sum
   end
 
-  # オーナー名の幅を揃えるため、ディレクトリ内のオーナー名の最長文字数を取得する
-  def count_owner_char_length(file_items)
-    file_items.map do |file_item|
-      owner = file_item.stat[:owner]
-      owner.length
-    end.max
+  def find_max_char_lengths(file_items)
+    %i[link_num owner group size].map do |key|
+      file_items.map do |file_item|
+        file_item.stat[key].to_s.length
+      end.max
+    end
   end
 
-  # グループ名の幅を揃えるため、ディレクトリ内のグループ名の最長文字数を取得する
-  def count_group_char_length(file_items)
-    file_items.map do |file_item|
-      group = file_item.stat[:group]
-      group.length
-    end.max
-  end
-
-  def build_row(file_item, owner_char_length, group_char_length)
+  def build_row(file_item, link_num_char_length, owner_char_length, group_char_length, size_char_length)
     file_item_stat = file_item.stat
     type = file_item_stat[:type]
     type_mark = convert_ftype_to_mark(type)
     permissions = convert_mode_to_permissions(file_item_stat[:mode])
-    link_num = file_item_stat[:link_num]
+    link_num = file_item_stat[:link_num].to_s.rjust(link_num_char_length)
     owner = file_item_stat[:owner].ljust(owner_char_length)
     group = file_item_stat[:group].ljust(group_char_length)
     time = file_item_stat[:time]
@@ -84,7 +72,7 @@ class LongDisplayFormat < DisplayFormat
       rdev = file_item_stat[:rdev]
       "#{type_mark}#{permissions} #{link_num} #{owner} #{group} #{rdev} #{time} #{name}"
     else
-      size = file_item_stat[:size].to_s.rjust(FILE_SIZE_COLUMUNS)
+      size = file_item_stat[:size].to_s.rjust(size_char_length)
       "#{type_mark}#{permissions} #{link_num} #{owner} #{group} #{size} #{time} #{name}"
     end
   end
