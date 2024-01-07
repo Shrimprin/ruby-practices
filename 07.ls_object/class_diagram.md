@@ -21,7 +21,7 @@ classDiagram
     -build_stat()
   }
 
-  class DisplayData {
+  class DisplayFormat {
     -dir_items
     -file_items
     -non_exist_items
@@ -31,18 +31,22 @@ classDiagram
     -sort_non_exist_items()
     -sort_dir_items()
     -sort_file_items()
+  }
+
+  class ShortDisplayFormat {
     -format()
     -store_files_in_column()
     -calc_columns_width()
     -unite_columns_to_rows()
     -count_character()
     -rjust_by_displayed_width()
+    -transpose_columns_to_row()
   }
 
-  class LongDisplayData {
+  class LongDisplayFormat {
+    -format()
     -count_total_blocks()
-    -count_owner_char_length()
-    -count_group_char_length()
+    -find_max_char_lengths()
     -build_row()
     -convert_ftype_to_mark()
     -convert_mode_to_permissions()
@@ -51,7 +55,8 @@ classDiagram
   LsCommand *-- DirItem
   LsCommand *-- FileItem
   DirItem *-- FileItem
-  LsCommand ..> DisplayData
-  LsCommand ..> LongDisplayData
-  LongDisplayData --|> DisplayData
+  LsCommand ..> ShortDisplayFormat
+  LsCommand ..> LongDisplayFormat
+  ShortDisplayFormat --|> DisplayFormat
+  LongDisplayFormat --|> DisplayFormat
 ```
