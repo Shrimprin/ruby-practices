@@ -9,10 +9,10 @@ class DisplayFormat
   end
 
   def result
-    formatted_data = []
-    sort_non_exist_items.each do |non_exist_item|
-      formatted_data << "ls: #{non_exist_item}: No such file or directory"
-    end
+    formatted_data =
+      sort_non_exist_items.map do |non_exist_item|
+        "ls: #{non_exist_item}: No such file or directory"
+      end
 
     unless @file_items.empty?
       formatted_data << format(sort_file_items(@file_items))
